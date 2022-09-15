@@ -95,14 +95,14 @@ let specCharaArray = [
   ">",
 ];
 
-Array.prototype.shuffle = function () {
+Array.prototype.shuffle = function () { //Creates a method that can be accessed via protoype/_proto_ property from any array
   let i = this.length,
     randomValue,
     temp;
 
-  while (--i > 0) {
-    randomValue = Math.floor(Math.random() * (i + 1));
-    temp = this[randomValue];
+  while (--i > 0) { //Itll start decending order till it hits the first index
+    randomValue = Math.floor(Math.random() * (i + 1)); //This will be the index that is going to be swapped with the current index
+    temp = this[randomValue]; //The start of the swapping of the index.
     this[randomValue] = this[i];
     this[i] = temp;
   }
@@ -128,15 +128,12 @@ function generatePassword() {
     let capsPrompt = confirm(
       "Would you like captial letters in your password?"
     );
-
     let lowercasePrompt = confirm(
       "Would you like a lowercase letters in your password?"
     );
-
     let specialPrompt = confirm(
       "Would you like special characters in your password?"
     );
-
     let numPrompt = confirm("Would you like numbers in your password?");
 
     if (!capsPrompt && !lowercasePrompt && !specialPrompt && !numPrompt) {
@@ -144,36 +141,66 @@ function generatePassword() {
       generatePassword();
     }
 
-    if(capsPrompt && lowercasePrompt && specialPrompt && !numPrompt) {
-
+    if (capsPrompt) {
+      answerArray = capsCaseArray
+    } else if (lowercasePrompt) {
+      answerArray = lowCaseArray
+    } else if (specialPrompt) {
+      answerArray = specCharaArray
+    } else if (numPrompt) {
+      answerArray = numArray
     }
 
-    
+    if(capsPrompt && lowercasePrompt && specialPrompt) {
+      answerArray = capsCaseArray.concat(lowCaseArray.concat(specCharaArray))
 
-    // lowCaseArray.shuffle();
+    } else if (capsPrompt && lowercasePrompt && numPrompt) {
+      answerArray = capsCaseArray.concat(lowCaseArray.concat(numArray))
 
-    console.log(lowCaseArray);
+    } else if (capsPrompt && specialPrompt && numPrompt){
+      answerArray = capsPrompt.concat(specCharaArray.concat(numArray))
 
+    } else if (capsPrompt && lowercasePrompt) {
+      answerArray = capsCaseArray.concat(lowCaseArray)
+
+    } else if (capsPrompt && specialPrompt) {
+      answerArray = capsCaseArray.concat(specCharaArray)
+
+    } else if (capsPrompt && numArray) {
+      answerArray = capsCaseArray.concat(numArray)
+    }
+
+    if(lowercasePrompt && specialPrompt && numArray) {
+      answerArray = lowCaseArray.concat(specCharaArray.concat(numArray))
+
+    } else if (lowercasePrompt && specialPrompt) {
+      answerArray = lowCaseArray.concat(specCharaArray)
+
+    } else if  (lowercasePrompt && numPrompt) {
+      answerArray = lowCaseArray.concat(numArray)
+
+    } else if (specialPrompt && numPrompt) {
+      answerArray = specCharaArray.concat(numArray)
+    }
+
+    answerArray.shuffle()
+    console.log(answerArray)
 
     for (i = 0; i < answerArray.length; i++) {
       outputArray.push(answerArray[i]);
       console.log(outputArray);
       finalArray = tempArray.concat(outputArray)
-
       if (outputArray.length < passLength) {
         answerArray.shuffle()
         i = 0;
         continue;
       }
-
       if (outputArray.length === passLength) {
         break;
       }
     }
-
-    console.log(finalArray);
-
-    //I want to make the array size as long as the passLength value
+    finalArray = finalArray.join('')
+    return finalArray
   }
 }
 
